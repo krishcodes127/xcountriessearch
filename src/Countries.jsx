@@ -34,12 +34,15 @@ const Countries = () => {
   const [Countries, SetCountries] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredCountries, setFilteredCountries] = useState([]);
-  const [countries, setCountries] = useState([]);
+ // const [countries, setCountries] = useState([]);
 
   useEffect(() => {
     fetch(API_URL)
       .then((res) => res.json())
-      .then((data) => SetCountries(data))
+      .then((data) => {
+        SetCountries(data);
+        setFilteredCountries(data); 
+      })
       .catch((error) => console.error("Error fetching data:" + error));
   }, []);
 
@@ -50,11 +53,12 @@ const Countries = () => {
 
   // Filter countries based on search query
   useEffect(() => {
-    const filtered = countries.filter((country) =>
+    const filtered = Countries.filter((country) =>
       country.name.common.toLowerCase().includes(searchQuery.toLowerCase())
     );
+    console.log(filtered);
     setFilteredCountries(filtered);
-  }, [searchQuery,countries]);
+  }, [searchQuery]);
 
   return (
     
@@ -76,7 +80,7 @@ const Countries = () => {
         style={{ padding: '10px', fontSize: '16px', width: '100%' }}
       />
       
-      {Countries.map((country) => (
+      {filteredCountries.map((country) => (
         <CountryCard
           name={country.name}
           flagUrl={country.flag}
@@ -88,3 +92,4 @@ const Countries = () => {
 };
 
 export default Countries;
+
